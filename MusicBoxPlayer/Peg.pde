@@ -2,17 +2,36 @@
 class Peg{
   int xLoc;
   int y;
+  int r;
+  int g;
+  int b;
+  boolean stop = false;
   
-  Peg(int inX){
+  Peg(int inX, int inR, int inG, int inB){
     xLoc = inX;
-    y = height/2;
+    y = height;
+    r = inR;
+    g = inG;
+    b = inB;
   }
   
-  void drawPeg(){
-    y -= 20;
+  void stopPeg(){
+    stop = true;
+  }
+  
+  void unStopPeg(){
+    stop = false;
+  }
+  
+  void display(){
+    y -= 0.8;
+   pushMatrix();
     translate(0, y);
-    fill(0);
-    ellipse(xLoc, height/2, 45, 45);
+    noStroke();
+    fill(r,g,b);
+    ellipse(xLoc, -30, 40, 40); 
+    popMatrix();
   } 
+  
   
 }

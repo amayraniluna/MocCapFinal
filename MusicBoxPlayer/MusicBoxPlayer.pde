@@ -20,13 +20,17 @@ MelodyPlayer player; //plays a midi sequence
 MidiFileToNotes midiNotes; //reads a midi file
 
 
-
+ArrayList<Peg> myPegs;
 boolean firstTimeOn;
 String filePath;
 int currentNote;
 float y;
- 
-
+int pastNote = 0;
+int randR;
+int randG;
+int randB;
+Random rand;
+boolean background = true;
 
 //SETUP
 void setup()
@@ -39,7 +43,8 @@ void setup()
   circularMotion = false;
   currentNote = 0;
   y = height/2;
-  
+  myPegs = new ArrayList<Peg>();
+  rand = new Random();
   
   //println("height: " + height);
   midiNotes = new MidiFileToNotes(filePath);
@@ -137,39 +142,53 @@ float getX(int midiNotePitch){
 
 
 void draw(){
-  background(0);
-  if(circularMotion == true)
-  {
-    if(firstTimeOn == true)
-    {
-      //playMidiFile(filePath); //begin to play the sound
-      firstTimeOn = false;
-    } 
+  
+    background(255);
     
-    //player.unPause();
+  if(circularMotion == true){
+    
     player.play(); //plays the notes on the console
-    drawNote();
-    //drawNote();
-    //background(255,255,81);//yellow
+    currentNote = player.getCurrentNote();
+    if(currentNote != pastNote){
+      randR = rand.nextInt(20);
+      randG = rand.nextInt(200);
+      randB = rand.nextInt(220);
+      myPegs.add(new Peg((int)(getX(currentNote)), randR, randG, randB));
+    }
+    for(Peg p: myPegs){
+      p.display();
+    }
+    
+    pastNote = currentNote;
   }
     else{
-      //player.pause();
-      //player.play(); 
-      background(4,0,255);//blue
+      //background(4,0,255);//blue
     }   
 }
 
 void drawNote(){
-   y -= 0.8;
-   currentNote = player.getCurrentNote();
-   //translate(0, y);
-     Random rand = new Random(); 
-     fill(rand.nextInt(20), rand.nextInt(200), rand.nextInt(255));
-   //println("getX: " + getX(currentNote));
-   ellipse(getX(currentNote), height/2, 45, 45);
-   
+  
+    
+   //y -= 0.8;
+   //currentNote = player.getCurrentNote();
+       //translate(0, y);
+   //Random rand = new Random(); 
+   //fill(rand.nextInt(20), rand.nextInt(200), rand.nextInt(255));
+   //ellipse(getX(currentNote), height/2, 45, 45);
 }  
 
+
+void pause(){
+  for(int i = 0 ; i < myPegs.size() ; i++){
+    myPegs.get(i).stopPeg();
+  }
+}
+
+void unPause(){
+  for(int i = 0 ; i < myPegs.size() ; i++){
+    myPegs.get(i).unStopPeg();
+  }
+}
 
 
 //RECIEVE OSC MESSAGE
