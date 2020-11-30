@@ -36,10 +36,10 @@ boolean background = true;
 void setup()
 {
   size(640, 480); 
-  background(255);  
+  background(0);  
  
   firstTimeOn = true;
-  filePath = "/Users/amayraniluna/Downloads/MoCapFinalProject/MusicBoxPlayer/midiFiles/Upmaintheme.mid";
+  filePath = "/Users/amayraniluna/Downloads/MoCapFinalProject/MusicBoxPlayer/midiFiles/HarryPotter.mid";
   circularMotion = false;
   currentNote = 0;
   y = height/2;
@@ -135,7 +135,7 @@ float getX(int midiNotePitch){
   
   else if(note == "B") return 576.0;
   
-  else return 624.0;
+  else return 620.0;
 }  
 
 
@@ -143,7 +143,7 @@ float getX(int midiNotePitch){
 
 void draw(){
   
-    background(255);
+    background(0);
     
   if(circularMotion == true){
     
