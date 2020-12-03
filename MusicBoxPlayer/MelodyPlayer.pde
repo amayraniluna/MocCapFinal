@@ -1,5 +1,4 @@
 /*
- * c2017 Courtney Brown 
  * 
  * Class: MelodyPlayer
  * Description: Sends a melody of midi notes to an external player/midi channel
@@ -79,7 +78,7 @@
       return;
 
       
-    int vel = 127; //midi velocity -- TODO: change/assign if want to vary
+    int vel = 127; //midi velocity
     float cur_time = parent.millis(); //what time is it now?
     play = cur_time - last_time >= notems * rhythm_multiplier; //should we send the note now? based on prev. note's duration
     
@@ -92,13 +91,10 @@
       System.out.println("note off:" + (note_index - 1)); //TODO: comment out when not debugging or not needed
       
       
-      // don't send anything else if done
+      //don't send anything else if done
       if (note_index == melody.size())
         note_index = 0;// ++; //cycle vs. stop at end ? TODO: create as an option
     }
-    
-    //if(paused == true)
-    //  return;
       
     //send out next pitch, find next rhythm / duration
     if (note_index < melody.size() && note_index > -1 && play) {
@@ -106,38 +102,24 @@
       outputMidiBus.sendNoteOn(0, (int) melody.get(note_index), vel);
       System.out.println("note on:" + "note: " + melody.get(note_index) + "  note index: " + note_index); //TODO: comment out when not debugging or not needed
       
-      
       if(hasRhythm)
         rhythm_multiplier = rhythm.get(note_index);
 
       noteOn = true;
       note_index++;
     }
-
   }
 
-  //reset note to 0
-  void reset() {
+
+//reset note to 0
+void reset() {
     note_index = 0;
-  }
+}
+
 
 int getLastPlayed(){
-  
   return lastPlayed;
 }
-
-
-boolean getNoteOn(){
-    return noteOn;
-} 
-
-void pause(){
-  paused = true;
-}
-
-void unPause(){
-  paused = false;
-} 
 
 
 int getCurrentNote(){

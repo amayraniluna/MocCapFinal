@@ -1,9 +1,8 @@
-/**
-* Very simple sketch that sends x,y values to Wekinator  
-* Run Wekinator with 2 inputs (mouse x & y)
-* Unlike the DTW Mouse Explorer, this does NOT also act as an output!
-* You should use one of your own outputs.
-**/
+/*
+*  Amayrani Luna
+*  Description: sends x,y values of the wrist to Wekinator     
+*
+*/
 
 import controlP5.*;
 import oscP5.*;
@@ -15,17 +14,19 @@ ControlP5 cp5;
 
 final String POSENET_ADDRESS = "/pose"; //the OSC message sent from the standalone
 
-//The port we are listening to... MUST match DESTPORT in the C++ example 
+//The port we are listening to
 final int LISTENING_PORT = 9876;
 
 PFont f, f2;
 boolean isRecording = true; //mode
 boolean isRecordingNow = true;
 
+//values recieved from posenet
 String bodyPart;
 float xPos = 0;
 float yPos;
 
+//values of the box output
 int areaTopX = 140;
 int areaTopY = 70;
 int areaWidth = 450;
@@ -53,7 +54,6 @@ void setup(){
 }
 
 
-
  
 void sendNames() {
   OscMessage msg = new OscMessage("/wekinator/control/setInputNames");
@@ -61,6 +61,8 @@ void sendNames() {
   msg.add("mouseY");
   oscP5.send(msg, dest);
 }
+
+
 
 void createControls() {
   cp5 = new ControlP5(this);
@@ -73,6 +75,8 @@ void createControls() {
      ;
 }
 
+
+
 void drawText() {
   fill(255);
   textFont(f);
@@ -84,6 +88,7 @@ void drawText() {
   }
   text ("This program does NOT act as an output; run with your own output!", 100, 50);  
 }
+
 
 void draw() {
   background(0);
@@ -102,6 +107,7 @@ void draw() {
 }
 
 
+//DETERMINES IF X,Y VALUES ARE WITHIN THE OUTPUT BOX
 boolean inTheBox(){
   if(xPos < (areaTopX + areaWidth) && xPos > areaTopX){
     if(yPos < (areaTopY + areaHeight) && yPos > areaTopY){
@@ -120,19 +126,8 @@ void drawClassifierArea() {
 
 
 
-boolean inBounds(float x, float y) {
- if (x < areaTopX || y < areaTopY) {
-    return false;
- }
- if (x > areaTopX + areaWidth || y > areaTopY + areaHeight) {
-    return false;
- } 
- return true;
-}
-
-
-
-void mousePressed() {//hold the mouse down as youre training a gesture
+//FOR TRAINING
+void mousePressed() {
   if (! inTheBox()) {
     return;
   }
@@ -167,7 +162,6 @@ void keyPressed() {
 
 
 
-
 //SENDING OSC TO WEKINATOR 
 void sendOsc() {
   OscMessage msg = new OscMessage("/wek/inputs");
@@ -183,8 +177,6 @@ void oscEvent(OscMessage msg){
   String addr = msg.addrPattern(); //get the address
   
   if(addr.contains(POSENET_ADDRESS)){ 
-    //print("address: ");
-    //print(addr); 
     
     for(int i=0; i<msg.arguments().length; i+=3)
     {
@@ -194,13 +186,8 @@ void oscEvent(OscMessage msg){
          yPos = msg.get(i+2).floatValue(); //setting y position of wrist
          
          sendOsc();
-         //println("right wrist detected, setting xPos and yPos");
+         
        }
-       
-       //print(" "+msg.get(i).stringValue() + " ");  
-       //print(" "+msg.get(i+1).floatValue() + " ");  
-       //print(" "+msg.get(i+2).floatValue() + " "); 
-       //println();
     }  
   }
 }
